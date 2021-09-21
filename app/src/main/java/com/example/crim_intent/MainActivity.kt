@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity() {
         if (currentFragment == null) {
             //val fragment = CrimeFragment()
                 val fragment = CrimeListFragment.newInstance()
+                //val fragment = CrimeListFragment()  because of private constructor
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_container,fragment)
