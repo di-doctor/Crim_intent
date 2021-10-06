@@ -3,9 +3,7 @@ package com.example.crim_intent
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -16,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.crim_intent.R.id.crime_solved_image
 import java.util.*
-import javax.security.auth.callback.Callback
+
 
 private const val TAG = "CrimeListFragment"
 
@@ -28,8 +26,7 @@ class CrimeListFragment : Fragment() {
     }
 
     private var callbacks: Callbacks? = null
-    private val NEEDPOLICE = 1
-    private val INDEPENDENTLY = 0
+
 
     companion object {
         fun newInstance(): CrimeListFragment {
@@ -47,6 +44,28 @@ class CrimeListFragment : Fragment() {
         callbacks = null
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.fragment_crime_list,menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item?.itemId){
+            R.id.new_crime->{
+                val crime = Crime()
+                crimeListViewModel.addCrime(crime)
+                callbacks?.onCrimeSelected(crime.id)
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     private lateinit var crimeRecycleView: RecyclerView
     private val crimeListViewModel: CrimeListViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeListViewModel::class.java)
@@ -61,7 +80,7 @@ class CrimeListFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_crime_list, container, false)
         crimeRecycleView =
-            view.findViewById(R.id.crime_recycle_view) as RecyclerView //JETPACK VIEWBINDER
+            view.findViewById(R.id.crime_recycle_view) as RecyclerView /* JETPACK VIEWBINDER */
         crimeRecycleView.layoutManager = LinearLayoutManager(context)
         crimeRecycleView.adapter = adapter
         return view
